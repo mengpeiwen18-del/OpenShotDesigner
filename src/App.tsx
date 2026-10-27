@@ -101,11 +101,13 @@ import { lazyWithRetry, prefetchLazyChunks } from './utils/lazyChunks';
 import { saveNativeProjectFile } from './utils/nativeProjectFile';
 import { DialogProvider, useDialogs } from './components/dialog/DialogProvider';
 import { PanelIntro } from './components/common/PanelIntro';
+import { DirectorAssistantPanel } from './components/director/DirectorAssistantPanel';
 
 type WorkspaceModule = 'shots' | 'storyboard' | 'script' | 'equipment' | 'schedule' | 'moodboard' | 'locations' | 'power' | 'logistics' | 'run_of_show' | 'continuity' | 'rigging' | 'contacts' | 'tasks' | 'budget' | 'inspector';
 type WorkspaceGroup = 'creative' | 'production' | 'technical';
 
 const MainLayout: React.FC = () => {
+  const [directorAssistantOpen, setDirectorAssistantOpen] = useState(false);
   const { project, activeSetup, selectedElementIds, storageWarning, dismissStorageWarning, keepThisTabsVersion, isModuleVisible, isViewfinderOpen } = useFloorPlan();
   useScriptSetupSync();
   const { activeRightTab, setActiveRightTab, theme, isExportModalOpen, isRightPanelOpen, setRightPanelOpen, isDashboardOpen } = useWorkspaceUI();
@@ -354,6 +356,27 @@ const MainLayout: React.FC = () => {
               cover the resizable production sidebar. */}
           <ProductionReadiness />
           <ReviewNotes />
+          <button
+            type="button"
+            onClick={() => setDirectorAssistantOpen(true)}
+            className="absolute top-3 right-3 z-40 rounded-xl bg-accent px-4 py-2 text-white text-xs font-bold shadow-lg hover:bg-accent-hover"
+            aria-label="打开中文 AI 导演助手"
+          >
+            AI 导演助手 · 中文
+          </button>
+          {directorAssistantOpen && (
+            <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="AI 导演助手">
+              <div className="w-full max-w-3xl h-[90vh] rounded-2xl overflow-hidden bg-surface border border-line shadow-2xl flex flex-col">
+                <div className="border-b border-line px-4 py-3 flex items-center justify-between">
+                  <strong className="text-sm text-ink">中文 AI 导演工作台 · 初期接入</strong>
+                  <button type="button" onClick={() => setDirectorAssistantOpen(false)} className="px-3 py-1.5 rounded-lg border border-line-strong text-ink text-xs">关闭 ✕</button>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <DirectorAssistantPanel />
+                </div>
+              </div>
+            </div>
+          )}
           <div className="flex-1 relative overflow-hidden">
             <SplitCanvasArea />
           </div>
