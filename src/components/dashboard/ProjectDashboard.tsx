@@ -237,7 +237,7 @@ export const ProjectDashboard: React.FC = () => {
 
   const handleCreate = () => {
     createNewProject({
-      title: newTitle.trim() || 'Untitled production',
+      title: newTitle.trim() || '未命名短剧项目',
       withSampleScenes: startWithSamples,
       workspacePreset: presetId,
       workspaceModules: presetId === 'custom' ? customModules : undefined,
@@ -681,9 +681,9 @@ export const ProjectDashboard: React.FC = () => {
               <Clapperboard className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-black tracking-tight uppercase">Your productions</h1>
+              <h1 className="text-lg sm:text-xl font-black tracking-tight">我的影视项目 · 导演工作台</h1>
               <p className={`text-xs text-ink-muted`}>
-                Start a new project, or pick up where you left off. Everything is saved in this browser.
+                新建短剧项目，或打开以前保存的项目。当前数据优先保存在本机浏览器，请定期导出备份。
               </p>
             </div>
           </div>
@@ -695,7 +695,7 @@ export const ProjectDashboard: React.FC = () => {
               aria-label="Cloud backup"
               className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 border-line-strong hover:bg-slate-200 dark:hover:bg-slate-800`}
             >
-              <Cloud className={`w-4 h-4 ${driveToken || nextcloud ? 'text-emerald-500' : 'text-sky-500'}`} /> Cloud
+              <Cloud className={`w-4 h-4 ${driveToken || nextcloud ? 'text-emerald-500' : 'text-sky-500'}`} /> 云端备份
               {(driveToken || nextcloud) && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />}
             </button>
             <button
@@ -703,7 +703,7 @@ export const ProjectDashboard: React.FC = () => {
               title="Inspect browser media storage"
               className={`px-2.5 py-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 border-line-strong hover:bg-surface-muted`}
             >
-              <HardDrive className="w-4 h-4" /> Storage
+              <HardDrive className="w-4 h-4" /> 本机存储
             </button>
             {projects.length > 0 && (
               <button
@@ -718,10 +718,24 @@ export const ProjectDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Director-first Chinese onboarding; the original production tools stay intact. */}
+        <div className="mb-5 rounded-2xl border border-sky-500/30 bg-sky-500/10 p-4">
+          <h2 className="text-sm font-bold mb-2">🎬 中文导演工作流程</h2>
+          <p className="text-xs text-ink-soft leading-relaxed">
+            第一步：输入短剧名称并选择“真人短剧导演模式” → 创建项目；
+            第二步：进入右侧“剧本”导入或输入原稿；
+            第三步：使用工作区的“AI 导演助手 · 中文”生成导演指令、导入并审核镜头草案；
+            第四步：在镜头清单、分镜板和俯视站位图中精修。
+          </p>
+          <p className="text-[11px] text-ink-muted mt-2">
+            目前 AI 助手属于人工审核过渡版，尚未连接直接生成的 AI 服务。导入项目文件仅支持本程序的 .osd/.json，不能直接把 DOCX 当作项目文件打开。
+          </p>
+        </div>
+
         {/* New project */}
         <div className={`border rounded-2xl p-4 mb-6 shadow-sm ${panel}`}>
           <h2 className="text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2">
-            <Plus className="w-4 h-4 text-accent-ink" /> New project
+            <Plus className="w-4 h-4 text-accent-ink" /> 新建短剧项目
           </h2>
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <input
@@ -730,17 +744,17 @@ export const ProjectDashboard: React.FC = () => {
               onKeyDown={(event) => {
                 if (event.key === 'Enter') handleCreate();
               }}
-              placeholder="Production title (e.g. The Long Walk Home)"
+              placeholder="项目名称，例如：九州·第一集·谁在猎杀科学家"
               className={`${field} sm:flex-1`}
             />
             <button
               onClick={handleCreate}
               className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-semibold flex items-center justify-center gap-1.5"
             >
-              <Plus className="w-4 h-4" /> Create
+              <Plus className="w-4 h-4" /> 创建项目
             </button>
             <button onClick={() => fileInputRef.current?.click()} className={`${ghostButton} justify-center py-2`}>
-              <FolderOpen className="w-3.5 h-3.5" /> Import project file
+              <FolderOpen className="w-3.5 h-3.5" /> 导入已有项目
             </button>
             {supportsNativeProjectOpen() && (
               <button
@@ -748,7 +762,7 @@ export const ProjectDashboard: React.FC = () => {
                 title="Open a .osd file with write-back: Ctrl+S saves into the same file"
                 className={`${ghostButton} justify-center py-2`}
               >
-                <FolderOpen className="w-3.5 h-3.5" /> Open…
+                <FolderOpen className="w-3.5 h-3.5" /> 打开项目…
               </button>
             )}
             <input ref={fileInputRef} type="file" accept=".osd,.json,application/json" onChange={handleImport} className="hidden" />
@@ -776,14 +790,14 @@ export const ProjectDashboard: React.FC = () => {
               className="accent-sky-600"
             />
             <span className="text-ink-soft">
-              Start with the example scenes (dialogue coverage + noir interrogation) instead of an empty stage
+              加入示例场景（方便体验对话分镜与人物调度）；正式制作建议不勾选
             </span>
           </label>
 
           {/* Workspace preset (plan §1.2): configures module visibility only */}
           <div className="mt-4">
             <div className="text-[10px] font-bold uppercase tracking-wide opacity-60 mb-1.5">
-              Workspace preset
+              选择导演工作模式
             </div>
             <div className="flex flex-wrap gap-1.5">
               {WORKSPACE_PRESETS.map((preset) => (
@@ -811,7 +825,7 @@ export const ProjectDashboard: React.FC = () => {
               >
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="text-[10px] font-bold uppercase tracking-wide opacity-60">
-                    Modules to show
+                    显示的功能模块
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -821,7 +835,7 @@ export const ProjectDashboard: React.FC = () => {
                         'border-line-strong hover:bg-surface-muted'
                       }`}
                     >
-                      All
+                      全选
                     </button>
                     <button
                       type="button"
@@ -830,7 +844,7 @@ export const ProjectDashboard: React.FC = () => {
                         'border-line-strong hover:bg-surface-muted'
                       }`}
                     >
-                      None
+                      全不选
                     </button>
                   </div>
                 </div>
@@ -858,12 +872,12 @@ export const ProjectDashboard: React.FC = () => {
                   ))}
                 </div>
                 <p className={`mt-2 text-[10px] text-ink-subtle`}>
-                  The floor plan and Inspector are always available.
+                  俯视站位图和镜头检查器始终可用。
                 </p>
               </div>
             )}
             <p className={`mt-2 text-[10px] text-ink-subtle`}>
-              {getPreset(presetId).description} Presets only change which tools are shown — you can enable or hide modules at any time.
+              {getPreset(presetId).description} 工作模式只影响功能显示，不会删除素材或镜头。
             </p>
           </div>
         </div>
@@ -921,7 +935,7 @@ export const ProjectDashboard: React.FC = () => {
           </div>
         )}
         <h2 className="text-xs font-bold uppercase tracking-wide mb-2 opacity-70">
-          Saved projects {projects.length > 0 && `(${projects.length})`}
+          已保存的短剧项目 {projects.length > 0 && `(${projects.length})`}
         </h2>
 
         {projects.length === 0 ? (

@@ -12,26 +12,26 @@ import {
 export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   {
     id: 'blank',
-    label: 'Blank Floor Plan',
-    description: 'A genuinely clean plan workspace — no mandatory actor/camera/shot bootstrap.',
+    label: '空白俯视站位图',
+    description: '从空白站位图开始，不预先添加人物和摄影机。',
     enabledModules: [...CORE_MODULES, 'annotations'],
   },
   {
     id: 'shot_planning',
-    label: 'Shot Planning / Blocking',
-    description: 'Blocking and coverage only: floor plan, shot list, lined script, storyboard.',
+    label: '分镜与人物调度',
+    description: '包含俯视站位、分镜清单、剧本和分镜板。',
     enabledModules: [...CORE_MODULES, 'annotations', 'shots', 'storyboard', 'script'],
   },
   {
     id: 'full',
-    label: 'Full Production',
-    description: 'Every module switched on — script through budget, gear through call sheets.',
+    label: '完整影视制作',
+    description: '开启从剧本到预算、排期和拍摄装备的所有功能。',
     enabledModules: [...ALL_MODULE_IDS],
   },
   {
     id: 'narrative',
-    label: 'Narrative Film',
-    description: 'Script-first workflow with coverage, scheduling and call sheets.',
+    label: '真人短剧导演模式（推荐）',
+    description: '以剧本为主，包含分镜、人物站位、道具、场记与拍摄计划。推荐 AI 真人短剧。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -51,8 +51,8 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'documentary',
-    label: 'Documentary',
-    description: 'Interviews, segments and shot planning without a screenplay.',
+    label: '纪录片模式',
+    description: '包含采访及镜头规划，可不使用标准剧本。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -70,8 +70,8 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'commercial',
-    label: 'Commercial / AV Script',
-    description: 'Two-column AV script workflow with boards and gear planning.',
+    label: '商业视频模式',
+    description: '双栏视听脚本、分镜和拍摄器材规划。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -88,16 +88,16 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'interview',
-    label: 'Interview',
-    description: 'Compact setup for interviews: plan, cameras, questions as segments.',
+    label: '采访模式',
+    description: '适合采访的场景、摄影机及问题规划。',
     enabledModules: [
       'contacts',
       'tasks',...CORE_MODULES, 'locations', 'shots', 'run_of_show', 'equipment'],
   },
   {
     id: 'concert',
-    label: 'Concert / Live Event',
-    description: 'Venue, stage, cameras, lighting, DMX, power, cables, run of show.',
+    label: '演出与活动',
+    description: '演出场地、舞台、灯光、摄影机和设备调度。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -117,8 +117,8 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'broadcast',
-    label: 'Broadcast / OB',
-    description: 'Studio or compound camera plan, signal flow and show-day schedule.',
+    label: '多机位转播',
+    description: '演播室摄影机部署及拍摄日流程。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -137,8 +137,8 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'studio',
-    label: 'Studio Production',
-    description: 'Multi-cam studio floor with technical planning modules.',
+    label: '演播室制作',
+    description: '多机位演播室与技术规划。',
     enabledModules: [
       'contacts',
       'tasks',
@@ -155,16 +155,16 @@ export const WORKSPACE_PRESETS: WorkspacePresetDefinition[] = [
   },
   {
     id: 'photo',
-    label: 'Photo Shoot',
-    description: 'Plan, mood boards and light setup — no motion-specific tooling.',
+    label: '摄影拍摄',
+    description: '摄影分镜、氛围参考与布光规划。',
     enabledModules: [
       'contacts',
       'tasks',...CORE_MODULES, 'locations', 'moodboard', 'equipment', 'power'],
   },
   {
     id: 'custom',
-    label: 'Custom',
-    description: 'Pick exactly which modules this project shows.',
+    label: '自定义',
+    description: '手动选择要显示的工作模块。',
     enabledModules: [...CORE_MODULES],
   },
 ];

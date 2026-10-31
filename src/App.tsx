@@ -101,11 +101,13 @@ import { lazyWithRetry, prefetchLazyChunks } from './utils/lazyChunks';
 import { saveNativeProjectFile } from './utils/nativeProjectFile';
 import { DialogProvider, useDialogs } from './components/dialog/DialogProvider';
 import { PanelIntro } from './components/common/PanelIntro';
+import { DirectorAssistantPanel } from './components/director/DirectorAssistantPanel';
 
 type WorkspaceModule = 'shots' | 'storyboard' | 'script' | 'equipment' | 'schedule' | 'moodboard' | 'locations' | 'power' | 'logistics' | 'run_of_show' | 'continuity' | 'rigging' | 'contacts' | 'tasks' | 'budget' | 'inspector';
 type WorkspaceGroup = 'creative' | 'production' | 'technical';
 
 const MainLayout: React.FC = () => {
+  const [directorAssistantOpen, setDirectorAssistantOpen] = useState(false);
   const { project, activeSetup, selectedElementIds, storageWarning, dismissStorageWarning, keepThisTabsVersion, isModuleVisible, isViewfinderOpen } = useFloorPlan();
   useScriptSetupSync();
   const { activeRightTab, setActiveRightTab, theme, isExportModalOpen, isRightPanelOpen, setRightPanelOpen, isDashboardOpen } = useWorkspaceUI();
@@ -205,20 +207,20 @@ const MainLayout: React.FC = () => {
     // hide, so anchoring it first keeps its position identical in every
     // workspace. When it sat last, it moved from slot 1 (Blank) to slot 5
     // (Full Production) purely by how many optional modules happened to be on.
-    { id: 'inspector', group: 'technical', label: 'Inspector', icon: Sliders, visible: true },
-    { id: 'shots', group: 'creative', label: 'Shot list', icon: Film, count: activeSetup.shots.length, visible: isModuleVisible('shots') },
-    { id: 'storyboard', group: 'creative', label: 'Storyboard', icon: ImageIcon, visible: isModuleVisible('storyboard') },
-    { id: 'script', group: 'creative', label: 'Script', icon: FileText, visible: isModuleVisible('script') },
-    { id: 'moodboard', group: 'creative', label: 'Moodboard', icon: Images, visible: isModuleVisible('moodboard') },
-    { id: 'locations', group: 'creative', label: 'Locations', icon: MapPin, visible: isModuleVisible('locations') },
-    { id: 'schedule', group: 'production', label: 'Schedule', icon: CalendarDays, visible: isModuleVisible('schedule') },
-    { id: 'equipment', group: 'production', label: 'Gear', icon: Boxes, count: sceneEquipCount, visible: isModuleVisible('equipment') },
-    { id: 'logistics', group: 'production', label: 'Logistics', icon: Package, visible: isModuleVisible('logistics') },
+    { id: 'inspector', group: 'technical', label: '镜头检查器 · Inspector', icon: Sliders, visible: true },
+    { id: 'shots', group: 'creative', label: '镜头清单 · Shot list', icon: Film, count: activeSetup.shots.length, visible: isModuleVisible('shots') },
+    { id: 'storyboard', group: 'creative', label: '分镜板 · Storyboard', icon: ImageIcon, visible: isModuleVisible('storyboard') },
+    { id: 'script', group: 'creative', label: '剧本 · Script', icon: FileText, visible: isModuleVisible('script') },
+    { id: 'moodboard', group: 'creative', label: '视觉参考 · Moodboard', icon: Images, visible: isModuleVisible('moodboard') },
+    { id: 'locations', group: 'creative', label: '场景资产 · Locations', icon: MapPin, visible: isModuleVisible('locations') },
+    { id: 'schedule', group: 'production', label: '拍摄排期 · Schedule', icon: CalendarDays, visible: isModuleVisible('schedule') },
+    { id: 'equipment', group: 'production', label: '摄影器材 · Gear', icon: Boxes, count: sceneEquipCount, visible: isModuleVisible('equipment') },
+    { id: 'logistics', group: 'production', label: '剧组后勤 · Logistics', icon: Package, visible: isModuleVisible('logistics') },
     { id: 'run_of_show', group: 'production', label: 'Run of show', icon: ListOrdered, visible: isModuleVisible('run_of_show') },
-    { id: 'continuity', group: 'production', label: 'Continuity', icon: ClipboardList, visible: isModuleVisible('continuity') },
-    { id: 'contacts', group: 'production', label: 'Crew', icon: Users, count: project.people?.length || undefined, visible: isModuleVisible('contacts') },
-    { id: 'tasks', group: 'production', label: 'Tasks', icon: KanbanSquare, count: project.tasks?.length || undefined, visible: isModuleVisible('tasks') },
-    { id: 'budget', group: 'production', label: 'Budget', icon: Coins, visible: isModuleVisible('budget') },
+    { id: 'continuity', group: 'production', label: '场记连续性 · Continuity', icon: ClipboardList, visible: isModuleVisible('continuity') },
+    { id: 'contacts', group: 'production', label: '演职人员 · Crew', icon: Users, count: project.people?.length || undefined, visible: isModuleVisible('contacts') },
+    { id: 'tasks', group: 'production', label: '任务 · Tasks', icon: KanbanSquare, count: project.tasks?.length || undefined, visible: isModuleVisible('tasks') },
+    { id: 'budget', group: 'production', label: '预算 · Budget', icon: Coins, visible: isModuleVisible('budget') },
     { id: 'power', group: 'technical', label: 'Power', icon: Zap, visible: isModuleVisible('power') },
     { id: 'rigging', group: 'technical', label: 'Rigging', icon: Anchor, visible: isModuleVisible('rigging') },
   ];
@@ -354,6 +356,27 @@ const MainLayout: React.FC = () => {
               cover the resizable production sidebar. */}
           <ProductionReadiness />
           <ReviewNotes />
+          <button
+            type="button"
+            onClick={() => setDirectorAssistantOpen(true)}
+            className="absolute top-3 right-3 z-40 rounded-xl bg-accent px-4 py-2 text-white text-xs font-bold shadow-lg hover:bg-accent-hover"
+            aria-label="打开中文 AI 导演助手"
+          >
+            AI 导演助手 · 中文
+          </button>
+          {directorAssistantOpen && (
+            <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="AI 导演助手">
+              <div className="w-full max-w-3xl h-[90vh] rounded-2xl overflow-hidden bg-surface border border-line shadow-2xl flex flex-col">
+                <div className="border-b border-line px-4 py-3 flex items-center justify-between">
+                  <strong className="text-sm text-ink">中文 AI 导演工作台 · 初期接入</strong>
+                  <button type="button" onClick={() => setDirectorAssistantOpen(false)} className="px-3 py-1.5 rounded-lg border border-line-strong text-ink text-xs">关闭 ✕</button>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <DirectorAssistantPanel />
+                </div>
+              </div>
+            </div>
+          )}
           <div className="flex-1 relative overflow-hidden">
             <SplitCanvasArea />
           </div>
@@ -445,7 +468,7 @@ const MainLayout: React.FC = () => {
                     return <button key={module.id} id={`tab-${module.id}`} onClick={() => { setActiveRightTab(module.id); setIsProductionMenuOpen(false); }} title={module.label} aria-label={module.label} className={`${active && !tabLabelsFit ? 'flex-none' : 'flex-1 min-w-0'} h-8 px-2.5 rounded-md flex items-center justify-center gap-1.5 text-[11px] font-semibold whitespace-nowrap transition-colors ${active ? 'bg-accent text-white shadow-sm' : 'text-ink-muted hover:bg-surface-muted hover:text-ink'}`}><Icon className="w-3.5 h-3.5 shrink-0" />{(tabLabelsFit || active) && <span className="truncate">{module.label}</span>}{module.count !== undefined && <span className={`rounded px-1 font-mono text-[10px] ${active ? 'bg-white/20' : isLight ? 'bg-slate-200' : 'bg-slate-950'}`}>{module.count}</span>}{module.id === 'inspector' && selectedElementIds.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}</button>;
                   })}
                   {hasProductionTools && <div className="relative flex-1 min-w-0" ref={productionMenuRef}>
-                    <button type="button" onClick={() => setIsProductionMenuOpen((open) => !open)} aria-expanded={isProductionMenuOpen} aria-haspopup="menu" title="Production modules" aria-label={`Production modules${activeProductionTool ? ` (${activeProductionTool.label})` : ''}`} className={`w-full h-8 px-2 rounded-md flex items-center justify-center gap-1.5 text-[10px] font-semibold transition-colors ${activeProductionTool ? 'bg-accent text-white shadow-sm' : 'text-ink-muted hover:bg-surface-muted hover:text-ink'}`}>
+                    <button type="button" onClick={() => setIsProductionMenuOpen((open) => !open)} aria-expanded={isProductionMenuOpen} aria-haspopup="menu" title="其他制作功能" aria-label={`Production modules${activeProductionTool ? ` (${activeProductionTool.label})` : ''}`} className={`w-full h-8 px-2 rounded-md flex items-center justify-center gap-1.5 text-[10px] font-semibold transition-colors ${activeProductionTool ? 'bg-accent text-white shadow-sm' : 'text-ink-muted hover:bg-surface-muted hover:text-ink'}`}>
                       {activeProductionTool ? React.createElement(activeProductionTool.icon, { className: 'w-3.5 h-3.5 shrink-0' }) : <CalendarDays className="w-3.5 h-3.5 shrink-0" />}
                       {tabLabelsFit && <span className="truncate">{activeProductionTool?.label ?? 'Production'}</span>}<ChevronDown className="w-3 h-3 shrink-0" />
                     </button>
